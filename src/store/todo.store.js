@@ -1,6 +1,6 @@
 import { Todo } from "../todo/models/todo.model";
 
-const Filters = {
+export const Filters = {
     All:'all',
     Completed: 'Completed',
     Pending: 'Pending'
@@ -18,14 +18,26 @@ const state = {
 }
 
 const initStore = () => {
-    console.log(state);
-    console.log('InitStore');
+    loadStore();
+    // console.log(state);
+    // console.log('InitStore');
 
 
 }
 
 const loadStore = () =>{
-    throw new Error('Not implemented');
+    if(!localStorage.getItem('state')) return;
+
+    const {todos = [], filter= Filters.All} = JSON.parse(localStorage.getItem('state'));
+    state.todos = todos;
+    state.filter = filter;
+    //console.log(localSorage.getItem('state'))
+    //throw new Error('Not implemented');
+}
+
+const saveLocalStorage = () => {
+    //console.log(JSON.stringify(state));
+    localStorage.setItem('state',JSON.stringify(state));
 }
 
 /**
@@ -54,6 +66,7 @@ const addTodo = (description) => {
     if (!description) throw new Error('Description is required');
     state.todos.push( new Todo(description));
     //throw new Error('Not implemented');
+    saveLocalStorage();
 }
 
 /**
@@ -70,6 +83,7 @@ const toggleTodo = (todoId) =>{
 
     })
     //throw new Error('Not implemented');
+    saveLocalStorage();
 
 }
 /**
@@ -78,23 +92,26 @@ const toggleTodo = (todoId) =>{
  */
 const deleteTodo = (todoId) =>{
     state.todos = state.todos.filter( todo => todo.id !== todoId);
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    saveLocalStorage();
 }
 
 const deleteCompleted = () =>{
-    state.todos = state.todos.filter( todo => todo.done);
-    throw new Error('Not implemented');
+    state.todos = state.todos.filter( todo => !todo.done);
+    saveLocalStorage();
+    //throw new Error('Not implemented');
 }
 /**
  * 
  * @param {String} newFilter 
  */
 const setFilter = ( newFilter = Filters.All) =>{
-    if (!Filters.hasOwnProperty(newFilter)){
-       throw new Error('Not found'); 
-    }else{
+    console.log(newFilter)
+    // if (!Filters.hasOwnProperty(newFilter)){
+    //    throw new Error('Not found'); 
+    // }else{
         state.filter = newFilter;
-    }
+    //}
     
     
 }
